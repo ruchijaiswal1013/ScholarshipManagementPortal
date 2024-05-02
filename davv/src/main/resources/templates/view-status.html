@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <title>View Application Status</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Reference Bootstrap files -->
+    <link rel="stylesheet"
+         href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+
+    <script	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    
+                <script type="text/javascript">
+</script>
+
+        <style>
+        .error {color:red}
+    </style>
+
+</head>
+
+<body>
+
+    <!-- -----------------Navigation bar--------------------------- -->
+
+	<nav class="navbar navbar-dark bg-primary">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#"><img 
+					src= 
+	  "https://banner2.cleanpng.com/20180614/kxa/kisspng-devi-ahilya-vishwavidyalaya-institute-of-managemen-5b22af70afcaa6.8922487815289997927201.jpg" 
+					alt="" width="30" 
+					height="30"></a> 
+				<a class="navbar-brand bg-primary" th:href="@{/}">Home</a>
+			</div>
+			<ul class="nav navbar-nav">
+				<li><a class="navbar-brand bg-primary" th:href="@{/student/personalInfo}">Apply for Scholarship</a></li>
+				<li><a class="navbar-brand bg-primary" th:href="@{/student/viewInfoForm}">View Application</a></li>
+				<li><a class="navbar-brand bg-primary" th:href="@{/student/viewStatus}">Show Application Status</a></li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+				<li>
+					
+						<a sec:authorize="hasAnyAuthority('ROLE_ADMIN')" th:href="@{/systems/}"><span
+								class="glyphicon glyphicon-user"><input class="btn btn-dark" type="submit"
+									value="Admin" /></span> </a>
+									
+				</li>
+				<li>
+					<a>
+						<span></span>
+						<form class="glyphicon glyphicon-log-in" th:action="@{/logout}" method="POST"><input
+								class="btn btn-dark" type="submit" value="Logout" /></form>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+
+	<!-- --------------------------Container box--------------------------------  -->
+	<div class="container">
+		<div style="background-color: #3279B7 " class="jumbotron">
+		<div style="color: white">
+			<h1 >D.A.V.V. SCHOLARSHIP</h1>
+			<p>YOU DREAM WE BUILD</p>
+		</div>
+	</div>
+	</div>
+	<hr>
+  <div class="alert alert-danger" th:if="${pInfo}=='null'">
+        <strong>You have not submited any application....!</strong>
+    </div>
+    </div>
+<c:if test="${pInfo!=null}">
+<!--  ----------------------------Container for application status-------------------------- -->
+<div th:if="${pInfo}!='null'">
+
+<div id="loginbox" style="margin-top: 50px;"
+class="mainbox col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
+
+<div  class="panel panel-primary">
+
+<div style="background-color: #3279B7 " class="panel-heading">
+<div class="panel-title">Check Your Application Status</div>
+</div>
+
+<div style="padding-top: 30px" class="panel-body">
+
+<h2>Your Application for ID:</h2>
+<tr th:each="row: ${pInfo}">
+<h2>
+    <span style="color: #3279B7"> <td th:text="${row.userName}"></td></span>
+</h2>
+<!-- --------------------------Check and show status--------------------------------- -->
+<h2>Status is</h2>
+    <div class="alert alert-success" th:if="${row.status}=='Approve'">
+        <strong>Approved!</strong>
+    </div>
+
+    <div class="alert alert-danger" th:if="${row.status}=='Rejected'">
+        <strong>Rejected!</strong>
+    </div>
+
+    <div class="alert alert-warning" th:if="${row.status}=='pending'">
+        <strong>Pending!</strong>
+    </div>
+    <span style="color: red"> <td th:text="${row.status}"></td></span>
+</tr>
+</div>
+</div>
+</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+   <head>
+      <title>User Home</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+   </head>
+   <body>
+      <!-- -----------------Navigation bar--------------------------- -->
+
+	<nav class="navbar navbar-dark bg-primary">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#"><img 
+					src= 
+	  "https://banner2.cleanpng.com/20180614/kxa/kisspng-devi-ahilya-vishwavidyalaya-institute-of-managemen-5b22af70afcaa6.8922487815289997927201.jpg" 
+					alt="" width="30" 
+					height="30"></a> 
+				<a class="navbar-brand bg-primary" th:href="@{/}">Home</a>
+			</div>
+			<ul class="nav navbar-nav">
+				<li><a sec:authorize="hasAnyAuthority('ROLE_USER')" class="navbar-brand bg-primary" th:href="@{/student/personalInfo}">Apply for Scholarship</a></li>
+				<li><a sec:authorize="hasAnyAuthority('ROLE_USER')" class="navbar-brand bg-primary" th:href="@{/student/viewInfoForm}">View Application</a></li>
+				<li><a sec:authorize="hasAnyAuthority('ROLE_USER')" class="navbar-brand bg-primary" th:href="@{/student/viewStatus}">Show Application Status</a></li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+				<li>
+					
+						<a sec:authorize="hasAnyAuthority('ROLE_ADMIN')" th:href="@{/systems/}"><span
+								class="glyphicon glyphicon-user"><input class="btn btn-dark" type="submit"
+									value="Admin" /></span> </a>
+									
+				</li>
+				<li>
+					<a>
+						<span></span>
+						<form class="glyphicon glyphicon-log-in" th:action="@{/logout}" method="POST"><input
+								class="btn btn-dark" type="submit" value="Logout" /></form>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+
+	<!-- --------------------------Container box--------------------------------  -->
+	<div class="container">
+		<div style="background-color: #3279B7 " class="jumbotron">
+		<div style="color: white">
+			<h1 >D.A.V.V. SCHOLARSHIP</h1>
+			<p>YOU DREAM WE BUILD</p>
+		</div>
+	</div>
+	</div>
+	<hr>
+      
+      
+      <!-- display user name and role -->
+      <div>
+         User: <span sec:authentication="name"></span>
+         <br><br>
+         Role(s): <span sec:authentication="principal.authorities"></span>
+         <br><br>
+         <!-- Check for login error -->																	
+         <div th:if="${session.user}" >
+            <p th:text="'Welcome .... ' + ${session.user.firstName} + ' ' + ${session.user.lastName} "></p>
+         </div>
+      </div>
+     
+   </body>
+</html>

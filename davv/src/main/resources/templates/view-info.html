@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+	<title>View User Form</title>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<!-- Reference Bootstrap files -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+	<script type="text/javascript">
+	</script>
+
+	<style>
+		.error {
+			color: red
+		}
+	</style>
+
+</head>
+
+<body>
+
+	<!-- -----------------Navigation bar--------------------------- -->
+
+	<nav class="navbar navbar-dark bg-primary">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#"><img 
+					src= 
+	  "https://banner2.cleanpng.com/20180614/kxa/kisspng-devi-ahilya-vishwavidyalaya-institute-of-managemen-5b22af70afcaa6.8922487815289997927201.jpg" 
+					alt="" width="30" 
+					height="30"></a> 
+				<a class="navbar-brand bg-primary" th:href="@{/}">Home</a>
+			</div>
+			<ul class="nav navbar-nav">
+				<li><a class="navbar-brand bg-primary" th:href="@{/student/personalInfo}">Apply for Scholarship</a></li>
+				<li><a class="navbar-brand bg-primary" th:href="@{/student/viewInfoForm}">View Application</a></li>
+				<li><a class="navbar-brand bg-primary" th:href="@{/student/viewStatus}">Show Application Status</a></li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+				<li>
+					
+						<a sec:authorize="hasAnyAuthority('ROLE_ADMIN')" th:href="@{/systems/}"><span
+								class="glyphicon glyphicon-user"><input class="btn btn-dark" type="submit"
+									value="Admin" /></span> </a>
+									
+				</li>
+				<li>
+					<a>
+						<span></span>
+						<form class="glyphicon glyphicon-log-in" th:action="@{/logout}" method="POST"><input
+								class="btn btn-dark" type="submit" value="Logout" /></form>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+
+	<!-- --------------------------Container box--------------------------------  -->
+	<div class="container">
+		<div style="background-color: #3279B7 " class="jumbotron">
+		<div style="color: white">
+			<h1 >D.A.V.V. SCHOLARSHIP</h1>
+			<p>YOU DREAM WE BUILD</p>
+		</div>
+	</div>
+	</div>
+	<hr>
+
+	<!-- -----------------------------Registration Form------------------- -->
+
+
+	<form th:action="@{/student/processInfoForm}" th:object="${pInfo}" method="POST" class="form-horizontal">
+
+		<!-- Place for messages: error, alert etc ... -->
+		<div class="form-group">
+			<div class="col-xs-15">
+				<div>
+
+					<!-- Place for messages: error, alert etc ... -->
+					<div class="form-group">
+						<div class="col-xs-15">
+							<div>
+
+								<!-- Check for registration error -->
+								<div th:if="${registrationError}" class="alert alert-danger col-xs-offset-1 col-xs-10">
+									<p> ${registrationError}</p>
+								</div>
+
+							</div>
+						</div>
+					</div>
+
+					<div style="background-color: #3279B7 " class="panel-heading">
+						<h2 style="color: white; margin-left: 30px;" class="panel-title" data-toggle="collapse" data-target="#demo">Add Your
+							Personal Details</h2>
+					</div>
+					<div id="demo" class="collapse">
+						<h3 style="margin-bottom: 25px;margin-left: 30px;"> Personal Details</h3>
+
+						<!-- need to associate the data with id -->
+						<!-- ----------------------------------Students Name-------------------------- -->
+						<div style="margin-bottom: 25px;margin-left: 30px;" class="input-group">
+							<span class="input-group-addon">Student name</span>
+							<input type="text" th:field="*{sName}" placeholder="Student Name (*)"
+								class="form-control" />
+						</div>
+
+						<div th:if="${#fields.hasErrors('sName')}" style="margin-bottom: 25px;margin-left: 30px;" class="text-danger">
+							<ul>
+								<li th:each="err : ${#fields.errors('sName')}" th:text="'Student name ' + ${err}" />
+							</ul>
+						</div>
+
+						<!-- ------------------------------------Father's Name------------------------- -->
+						<div style="margin-bottom: 25px;margin-left: 30px;" class="input-group">
+							<span class="input-group-addon">Father's name</span>
+							<input type="text" th:field="*{fName}" placeholder="Student's Father Name (*)"
+								class="form-control" />
+						</div>
+
+						<div th:if="${#fields.hasErrors('fName')}" style="margin-bottom: 25px;margin-left: 30px;" class="text-danger">
+							<ul>
+								<li th:each="err : ${#fields.errors('fName')}"
+									th:text="'Student's Father name ' + ${err}" />
+							</ul>
+						</div>
+
+						<!-- -------------------------------------Date of Birth-------------------------- -->
+						<div style="margin-bottom: 25px;margin-left: 30px;" class="input-group">
+							<span class="input-group-addon">DOB</span>
+							<input type="text" th:field="*{dob}" placeholder="DD/MM/YYYY (*)" class="form-control" />
+						</div>
+
+						<div th:if="${#fields.hasErrors('dob')}" style="margin-bottom: 25px;margin-left: 30px;" class="text-danger">
+							<ul>
+								<li th:each="err : ${#fields.errors('dob')}"
+									th:text="'Student Date Of Birth ' + ${err}" />
+							</ul>
+						</div>
+
+						<!-- ---------------------------------------Category---------------------------------- -->
+						<div style="margin-bottom: 25px;margin-left: 30px;" class="input-group">
+							<span class="input-group-addon">Category</span>
+							
+                                <select th:id="catagory" th:field="*{catagory}" placeholder="catagory (*)"  class="form-control"  th:errorclass="fieldError" >
+                                 <option th:value="'SC'" th:text="'SC'"></option>
+                                 <option th:value="'ST'" th:text="'ST'"></option>
+                                 <option th:value="'OBC'" th:text="'OBC'"></option>
+                                 <option th:value="'GEN'" th:text="'GEN'"></option>
+                                </select>
+                                <input type="text" th:field="*{catagory}" th:id="catagoryfield" disabled="disabled" placeholder="category (*)"  class="form-control"  th:errorclass="fieldError" />
+                            </div>
+                            <div th:if="${#fields.hasErrors('catagory')}"
+                                style="margin-bottom: 25px;margin-left: 30px;" class="text-danger">
+                                <ul>
+                                  <li th:each="err : ${#fields.errors('catagory')}" th:text="'Category ' + ${err}" />
+                                </ul>						
+                            </div>
+
+
+						<!-- -------------------------------------------Gender----------------------------------- -->
+						<div style="margin-bottom: 25px;margin-left: 30px;" class="input-group">
+							<span class="input-group-addon">Gender</span> 
+							 <select th:id="gender" th:field="*{gender}" placeholder="gender (*)"  class="form-control"  th:errorclass="fieldError" >
+                                 <option th:value="'Male'" th:text="'Male'"></option>
+                                 <option th:value="'Female'" th:text="'Female'"></option>
+                                 <option th:value="'other'" th:text="'Other'"></option>
+                                </select>
+                                <input type="text" th:field="*{gender}" th:id="genderfield" disabled="disabled" placeholder="gender (*)"  class="form-control"  th:errorclass="fieldError" />
+                            </div>
+                            <div th:if="${#fields.hasErrors('gender')}"
+                                style="margin-bottom: 25px;margin-left: 30px;" class="text-danger">
+                                <ul>
+                                  <li th:each="err : ${#fields.errors('gender')}" th:text="'gender ' + ${err}" />
+                                </ul>						
+                            </div>
+
+						<!-- ----------------------------------------Aadhar Number------------------------------- -->
+						<div style="margin-bottom: 25px;margin-left: 30px;" class="input-group">
+							<span class="input-group-addon">Aadhar Number</span>
+							<input type="text" th:field="*{aadhar_no}" placeholder="Student Aadhar (*)"
+								class="form-control" />
+						</div>
+
+						<div th:if="${#fields.hasErrors('aadhar_no')}" style="margin-bottom: 25px;margin-left: 30px;" class="text-danger">
+							<ul>
+								<li th:each="err : ${#fields.errors('aadhar_no')}"
+									th:text="'Student Aadhar ' + ${err}" />
+							</ul>
+						</div>
+
+						<!-- -------------------------------------------Email------------------------------------ -->
+						<div style="margin-bottom: 25px;margin-left: 30px;" class="input-group">
+							<span class="input-group-addon">Email Address</span>
+							<input type="text" th:field="*{email}" placeholder="Student Email (*)"
+								class="form-control" />
+						</div>
+
+						<div th:if="${#fields.hasErrors('email')}" style="margin-bottom: 25px;margin-left: 30px;" class="text-danger">
+							<ul>
+								<li th:each="err : ${#fields.errors('email')}" th:text="'Student email ' + ${err}" />
+							</ul>
+						</div>
+
+						<!-- ------------------------------------------Phone-------------------------------------- -->
+						<div style="margin-bottom: 25px;margin-left: 30px;" class="input-group">
+							<span class="input-group-addon">Phone Number</span>
+							<input type="text" th:field="*{phone}" placeholder="Student Phone (*)"
+								class="form-control" />
+						</div>
+
+						<div th:if="${#fields.hasErrors('phone')}" style="margin-bottom: 25px;margin-left: 30px;" class="text-danger">
+							<ul>
+								<li th:each="err : ${#fields.errors('phone')}" th:text="'Student phone ' + ${err}" />
+							</ul>
+						</div>
+						<!-- -----------------------------------------State------------------------------------------ -->
+						<div style="margin-bottom: 25px;margin-left: 30px;" class="input-group">
+							<span class="input-group-addon">State Name</span>
+							<input type="text" th:field="*{state}" placeholder="State (*)" class="form-control" />
+						</div>
+
+						<div th:if="${#fields.hasErrors('state')}" style="margin-bottom: 25px;margin-left: 30px;" class="text-danger">
+							<ul>
+								<li th:each="err : ${#fields.errors('state')}" th:text="'state ' + ${err}" />
+							</ul>
+						</div>
+
+						<!-- -------------------------------------------City------------------------------------------ -->
+						<div style="margin-bottom: 25px;margin-left: 30px;" class="input-group">
+							<span class="input-group-addon">City</span>
+							<input type="text" th:field="*{city}" placeholder=" city (*)" class="form-control" />
+						</div>
+
+						<div th:if="${#fields.hasErrors('city')}" style="margin-bottom: 25px;margin-left: 30px;" class="text-danger">
+							<ul>
+								<li th:each="err : ${#fields.errors('city')}" th:text="'city ' + ${err}" />
+							</ul>
+						</div>
+						<!-- pin -->
+						<div style="margin-bottom: 25px;margin-left: 30px;" class="input-group">
+							<span class="input-group-addon">Pin Code</span>
+							<input type="text" th:field="*{pin}" placeholder="pin (*)" class="form-control" />
+						</div>
+
+						<div th:if="${#fields.hasErrors('pin')}" style="margin-bottom: 25px;margin-left: 30px;" class="text-danger">
+							<ul>
+								<li th:each="err : ${#fields.errors('pin')}" th:text="'pin ' + ${err}" />
+							</ul>
+						</div>
+					</div>
+					<hr>
+
+					<!----------------------------------Educational information--------------------------------------->
+					<div style="background-color: #3279B7 " class="panel-heading">
+						<h2 style="color: white; margin-left: 30px;" class="panel-title" data-toggle="collapse" data-target="#demo1">Add
+							Your Higher Secondry School Details</h2>
+					</div>
+					<div id="demo1" class="collapse">
+						<h3 style="margin-bottom: 25px;margin-left: 30px;">Higher Secondry School</h3>
+
+						<!---------------------------------- School Name---------------------------------------------- -->
+						<div style="margin-bottom: 25px;margin-left: 30px;" class="input-group">
+							<span class="input-group-addon">School name</span>
+							<input type="text" th:field="*{hs_school}" placeholder="Student hs_school (*)"
+								class="form-control" />
+						</div>
+
+						<div th:if="${#fields.hasErrors('hs_school')}" style="margin-bottom: 25px;margin-left: 30px;" class="text-danger">
+							<ul>
+								<li th:each="err : ${#fields.errors('hs_school')}"
+									th:text="'Student hs_school ' + ${err}" />
+							</ul>
+						</div>
+
+						<!-- ----------------------------------------Board Name-------------------------------- -->
+						<div style="margin-bottom: 25px;margin-left: 30px;" class="input-group">
+							<span class="input-group-addon">Board name</span>
+							<input type="text" th:field="*{hs_board}" placeholder="Student hs_board (*)"
+								class="form-control" />
+						</div>
+
+						<div th:if="${#fields.hasErrors('hs_board')}" style="margin-bottom: 25px;margin-left: 30px;" class="text-danger">
+							<ul>
+								<li th:each="err : ${#fields.errors('hs_board')}"
+									th:text="'Student hs_board ' + ${err}" />
+							</ul>
+						</div>
+
+						<!-- -------------------------------------------Marks-------------------------------- -->
+						<div style="margin-bottom: 25px;margin-left: 30px;" class="input-group">
+							<span class="input-group-addon">Marks Obtained</span>
+							<input type="text" th:field="*{hs_mars}" placeholder="Student hs_mars (*)"
+								class="form-control" />
+						</div>
+
+						<div th:if="${#fields.hasErrors('hs_mars')}" style="margin-bottom: 25px;margin-left: 30px;" class="text-danger">
+							<ul>
+								<li th:each="err : ${#fields.errors('hs_mars')}"
+									th:text="'Student hs_mars ' + ${err}" />
+							</ul>
+						</div>
+
+						<!-- Passing year -->
+						<div style="margin-bottom: 25px;margin-left: 30px;" class="input-group">
+							<span class="input-group-addon">Year Of Passing</span>
+							<input type="text" th:field="*{hs_year}" placeholder="Student hs_year (*)"
+								class="form-control" />
+						</div>
+
+						<div th:if="${#fields.hasErrors('hs_year')}" style="margin-bottom: 25px;margin-left: 30px;" class="text-danger">
+							<ul>
+								<li th:each="err : ${#fields.errors('hs_year')}"
+									th:text="'Student hs_year ' + ${err}" />
+							</ul>
+						</div>
+					</div>
+
+					<hr>
+
+					<div style="background-color: #3279B7 " class="panel-heading">
+						<h2 style="color: white; margin-left: 30px;" class="panel-title" data-toggle="collapse" data-target="#demo2">Add
+							Your Higher School Details</h2>
+					</div>
+					<div id="demo2" class="collapse">
+						<h3 style="margin-bottom: 25px;margin-left: 30px;">Higher School </h3>
+						<!-- ---------------------------------School Name----------------------------- -->
+						<div style="margin-bottom: 25px;margin-left: 30px;" class="input-group">
+							<span class="input-group-addon">School name</span>
+							<input type="text" th:field="*{h_school}" placeholder="Student h_school (*)"
+								class="form-control" />
+						</div>
+
+						<div th:if="${#fields.hasErrors('h_school')}" style="margin-bottom: 25px;margin-left: 30px;" class="text-danger">
+							<ul>
+								<li th:each="err : ${#fields.errors('h_school')}"
+									th:text="'Student h_school ' + ${err}" />
+							</ul>
+						</div>
+
+						<!-- ---------------------------------Board Name----------------------------- -->
+						<div style="margin-bottom: 25px;margin-left: 30px;" class="input-group">
+							<span class="input-group-addon">Board name</span>
+							<input type="text" th:field="*{h_board}" placeholder="Student h_board (*)"
+								class="form-control" />
+						</div>
+
+						<div th:if="${#fields.hasErrors('h_board')}" style="margin-bottom: 25px;margin-left: 30px;" class="text-danger">
+							<ul>
+								<li th:each="err : ${#fields.errors('h_board')}"
+									th:text="'Student h_board ' + ${err}" />
+							</ul>
+						</div>
+
+						<!-- -----------------------------------Marks-------------------------------- -->
+						<div style="margin-bottom: 25px;margin-left: 30px;" class="input-group">
+							<span class="input-group-addon">Marks Obtained</span>
+							<input type="text" th:field="*{h_mars}" placeholder="Student h_mars (*)"
+								class="form-control" />
+						</div>
+
+						<div th:if="${#fields.hasErrors('h_mars')}" style="margin-bottom: 25px;margin-left: 30px;" class="text-danger">
+							<ul>
+								<li th:each="err : ${#fields.errors('h_mars')}" th:text="'Student h_mars ' + ${err}" />
+							</ul>
+						</div>
+
+						<!-- -----------------------------------Passing year-------------------------- -->
+						<div style="margin-bottom: 25px;margin-left: 30px;" class="input-group">
+							<span class="input-group-addon">Year Of Passing</span>
+							<input type="text" th:field="*{h_year}" placeholder="Student h_year (*)"
+								class="form-control" />
+						</div>
+
+						<div th:if="${#fields.hasErrors('h_year')}" style="margin-bottom: 25px;margin-left: 30px;" class="text-danger">
+							<ul>
+								<li th:each="err : ${#fields.errors('h_year')}" th:text="'Student h_year ' + ${err}" />
+							</ul>
+						</div>
+					</div>
+
+					<hr>
+
+					<!-- ------------------------------------Bank Details--------------------------------- -->
+					<div style="background-color: #3279B7 " class="panel-heading">
+						<h2 style="color: white; margin-left: 30px;" class="panel-title" data-toggle="collapse" data-target="#demo3">Add
+							Your Bank Details</h2>
+					</div>
+					<div id="demo3" class="collapse">
+						<h3 style="margin-bottom: 25px;margin-left: 30px;">Bank Details</h3>
+						<!-- Bank Name -->
+						<div style="margin-bottom: 25px;margin-left: 30px;" class="input-group">
+							<span class="input-group-addon">Bank Name</span>
+							<input type="text" th:field="*{bName}" placeholder="Student bName (*)"
+								class="form-control" />
+						</div>
+
+						<div th:if="${#fields.hasErrors('bName')}" style="margin-bottom: 25px;margin-left: 30px;" class="text-danger">
+							<ul>
+								<li th:each="err : ${#fields.errors('bName')}" th:text="'Student bName ' + ${err}" />
+							</ul>
+						</div>
+
+						<!-- ----------------------------------Branch Name------------------------------------- -->
+						<div style="margin-bottom: 25px;margin-left: 30px;" class="input-group">
+							<span class="input-group-addon">Branch Name</span>
+							<input type="text" th:field="*{branch}" placeholder="Student branch (*)"
+								class="form-control" />
+						</div>
+
+						<div th:if="${#fields.hasErrors('branch')}" style="margin-bottom: 25px;margin-left: 30px;" class="text-danger">
+							<ul>
+								<li th:each="err : ${#fields.errors('branch')}" th:text="'Student branch ' + ${err}" />
+							</ul>
+						</div>
+
+						<!-- --------------------------------IFSC code----------------------------------------- -->
+						<div style="margin-bottom: 25px;margin-left: 30px;" class="input-group">
+							<span class="input-group-addon">IFSC code</span>
+							<input type="text" th:field="*{ifsc}" placeholder="Student ifsc (*)" class="form-control" />
+						</div>
+
+						<div th:if="${#fields.hasErrors('ifsc')}" style="margin-bottom: 25px;margin-left: 30px;" class="text-danger">
+							<ul>
+								<li th:each="err : ${#fields.errors('ifsc')}" th:text="'Student ifsc ' + ${err}" />
+							</ul>
+						</div>
+
+						<!-- --------------------------------Account number------------------------------------ -->
+						<div style="margin-bottom: 25px;margin-left: 30px;" class="input-group">
+							<span class="input-group-addon">Account number</span>
+							<input type="text" th:field="*{ac_no}" placeholder="Student ac_no (*)"
+								class="form-control" />
+						</div>
+
+						<div th:if="${#fields.hasErrors('ac_no')}" style="margin-bottom: 25px;margin-left: 30px;" class="text-danger">
+							<ul>
+								<li th:each="err : ${#fields.errors('ac_no')}" th:text="'Student ac_no ' + ${err}" />
+							</ul>
+						</div>
+					</div>
+					<hr>
+					<!-- -------------------------------Register Button-------------------------------------- -->
+					<div style="margin-top: 10px" class="form-group">
+						<div class="col-sm-6 controls">
+							<button type="submit" style="background-color:#3279B7; margin-left: 30px;"
+								class="btn btn-primary">Submit</button>
+						</div>
+					</div>
+					</form:form>
+
+				</div>
+
+			</div>
+
+		</div>
+
+		</div>
+</body>
+
+</html>
